@@ -1,0 +1,196 @@
+{
+    "res": [
+        {
+            "content": "UNITED",
+            "tag": "Geographical Entity",
+            "index": 0,
+            "color": "#cc6666"
+        },
+        {
+            "content": "SECURITIES",
+            "tag": "Organization",
+            "index": 0,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Washington,",
+            "tag": "Geographical Entity",
+            "index": 0,
+            "color": "#cc6666"
+        },
+        {
+            "content": "D.C",
+            "tag": "Geographical Entity",
+            "index": 1,
+            "color": "#cc6666"
+        },
+        {
+            "content": "SECURITIES EXCHANGE ACT OF",
+            "tag": "Organization",
+            "index": 13,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "1934. ",
+            "tag": "Time indicator",
+            "index": 14,
+            "color": "#9966cc"
+        },
+        {
+            "content": "fiscal",
+            "tag": "Time indicator",
+            "index": 2,
+            "color": "#9966cc"
+        },
+        {
+            "content": "October 31, 2020 ",
+            "tag": "Time indicator",
+            "index": 7,
+            "color": "#9966cc"
+        },
+        {
+            "content": "SECURITIES EXCHANGE ACT OF",
+            "tag": "Organization",
+            "index": 12,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "1934. ",
+            "tag": "Time indicator",
+            "index": 13,
+            "color": "#9966cc"
+        },
+        {
+            "content": "Agilent Technologies, Inc.",
+            "tag": "Organization",
+            "index": 1,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Stevens",
+            "tag": "Geographical Entity",
+            "index": 6,
+            "color": "#cc6666"
+        },
+        {
+            "content": "Santa Clara,",
+            "tag": "Geographical Entity",
+            "index": 10,
+            "color": "#cc6666"
+        },
+        {
+            "content": "California",
+            "tag": "Geographical Entity",
+            "index": 11,
+            "color": "#cc6666"
+        },
+        {
+            "content": "Securities Act",
+            "tag": "Organization",
+            "index": 19,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Section 13",
+            "tag": "Time indicator",
+            "index": 16,
+            "color": "#9966cc"
+        },
+        {
+            "content": "Securities Exchange Act",
+            "tag": "Organization",
+            "index": 23,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "1934",
+            "tag": "Time indicator",
+            "index": 25,
+            "color": "#9966cc"
+        },
+        {
+            "content": "preceding 12 months",
+            "tag": "Time indicator",
+            "index": 29,
+            "color": "#9966cc"
+        },
+        {
+            "content": "past 90 days",
+            "tag": "Time indicator",
+            "index": 55,
+            "color": "#9966cc"
+        },
+        {
+            "content": "preceding",
+            "tag": "Time indicator",
+            "index": 29,
+            "color": "#9966cc"
+        },
+        {
+            "content": "12 months",
+            "tag": "Time indicator",
+            "index": 30,
+            "color": "#9966cc"
+        },
+        {
+            "content": "Exchange Act.",
+            "tag": "Organization",
+            "index": 21,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Exchange Act",
+            "tag": "Organization",
+            "index": 39,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Sarbanes-Oxley Act",
+            "tag": "Organization",
+            "index": 34,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "U.S.C",
+            "tag": "Organization",
+            "index": 36,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "Exchange",
+            "tag": "Organization",
+            "index": 17,
+            "color": "#66cc7f"
+        },
+        {
+            "content": "April 30, 2020,",
+            "tag": "Time indicator",
+            "index": 15,
+            "color": "#9966cc"
+        },
+        {
+            "content": "December 10, 2020",
+            "tag": "Time indicator",
+            "index": 3,
+            "color": "#9966cc"
+        },
+        {
+            "content": "March 17, 2021,",
+            "tag": "Time indicator",
+            "index": 19,
+            "color": "#9966cc"
+        },
+        {
+            "content": "fiscal",
+            "tag": "Time indicator",
+            "index": 31,
+            "color": "#9966cc"
+        },
+        {
+            "content": "October 31, 2020",
+            "tag": "Time indicator",
+            "index": 35,
+            "color": "#9966cc"
+        }
+    ]
+}

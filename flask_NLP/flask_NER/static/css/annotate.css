@@ -1,0 +1,180 @@
+body {
+  background-color: #111;
+  color: #ccc;
+}
+.fa {
+  color: #ccc;
+}
+
+.color-picker {
+  float: left;
+  display: block;
+  margin: 10px 0 5px;
+  text-align: center;
+}
+.color-picker > span {
+  border: 1px solid #111 !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+}
+.color-picker > span:hover {
+  cursor: pointer;
+  border: 1px solid #444;
+}
+.color-picker .selected {
+  box-shadow: #bbb 0 0 4px 2px;
+}
+
+.dropdown-display-label .dropdown-selected {
+  position: relative;
+  margin: 0 5px 5px 0;
+  padding: 0 20px 0 5px;
+  border: 1px solid #aaa;
+  max-width: 100%;
+  border-radius: 3px;
+  background-repeat: repeat-x;
+  color: #333;
+  cursor: default;
+  display: inline-block;
+}
+.dropdown-display-label .dropdown-selected .del {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+  float: right;
+  line-height: 1;
+  color: #999;
+  position: absolute;
+  right: 3px;
+  top: 0;
+}
+.dropdown-display-label .dropdown-selected .del:after {
+  content: '\D7';
+  font-size: 16px;
+}
+
+.hl_createtag {
+  color: #333;
+  background-color: transparent;
+  margin-right: 10px;
+  cursor: pointer;
+  border: none;
+}
+.hl_dropdown-menu {
+  float: left;
+  position: relative;
+  display: inline-block;
+  margin-top: -8px;
+  cursor: pointer;
+}
+
+.action {
+  border: 1px;
+  background-color: #555;
+  padding: 10px;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  max-width: 500px;
+  position: relative;
+  background-color: #444444;
+  margin: auto;
+  padding: 0;
+  border: 1px solid #888;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  -webkit-animation-name: animatetop;
+  -webkit-animation-duration: 0.4s;
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+}
+.modal-body {
+  margin-bottom: 30px !important;
+}
+.modal-body > form > label {
+  color: #ffffff;
+  display: inline-block;
+  width: 30%;
+  text-align: left;
+}
+​ .modal-body > form > input,
+.modal-body > form > textarea {
+  color: #ffffff;
+  background-color: #000000 !important;
+  width: 65% !important;
+}
+.modal-body > form > select {
+  background-color: #000000;
+  width: 65%;
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+
+/* The Close Button */
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal-header {
+  padding: 2px 16px;
+  background-color: #444444;
+  color: white;
+}
+
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-footer {
+  padding: 2px 16px;
+  background-color: #444444;
+  color: white;
+}

@@ -1,0 +1,28 @@
+{% extends "layout_annotate.html" %} {% block content %}
+<ul class="navbar-nav mr-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="{{url_for('NER',report_id=report.id)}}"
+      >Named Entity Recognition</a
+    >
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      href="{{url_for('info_extraction',report_id=report.id)}}"
+      >Information Extraction</a
+    >
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link"
+      href="{{url_for('table_extraction',report_id=report.id)}}"
+      >Table Extraction</a
+    >
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{{url_for('summary',report_id=report.id)}}"
+      >Summary</a
+    >
+  </li>
+</ul>
+{% endblock content %}

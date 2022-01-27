@@ -1,0 +1,137 @@
+{% extends "layout.html" %} {% block content %}
+<header class="site-header">
+  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <div class="container">
+      <a class="navbar-brand mr-4" href="/">Company Annual Report</a>
+    </div>
+  </nav>
+</header>
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <h2>Search</h2>
+    </div>
+    <div class="col-md-9">
+      <input
+        class="form-control mr-sm-2"
+        type="search"
+        id="myInput"
+        onkeyup="searchByName()"
+        placeholder="Search company by name"
+        aria-label="Search"
+      />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <h5>Exchange</h5>
+
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          {%if currentExchangeId ==0%}
+          <a
+            class="nav-link active"
+            style="text-decoration: none; color: black"
+            href="{{url_for('home')}}"
+            >All</a
+          >
+          {% else %}
+          <a
+            class="nav-link active"
+            style="text-decoration: none; color: gray"
+            href="{{url_for('home')}}"
+            >All</a
+          >
+          {% endif %}
+        </li>
+
+        {% for exchange in exchanges %} {% if exchange.id == currentExchangeId
+        %}
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            style="text-decoration: none; color: black"
+            href="{{url_for('exchange',exchangeId=exchange.id)}}"
+            >{{exchange.exchange_name}}</a
+          >
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            style="text-decoration: none; color: gray"
+            href="{{url_for('exchange',exchangeId=exchange.id)}}"
+            >{{exchange.exchange_name}}</a
+          >
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <table class="table table-hover" id="myTable">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Ticker</th>
+            <th scope="col">Company name</th>
+            <th scope="col">Exchange</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for company in companies.items %}
+
+          <tr>
+            <th scope="row">{{company.id}}</th>
+            <td>{{company.ticker}}</td>
+            <td>
+              <a
+                style="text-decoration: none; color: black"
+                href="{{url_for('company_reports',company_id=company.id)}}"
+                >{{company.company_name}}</a
+              >
+            </td>
+            <td>{{company.exchange.exchange_name}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% for page_num in
+      companies.iter_pages(left_edge=3,right_edge=3,left_current=1,right_current=2)
+      %} {% if page_num %} {% if companies.page == page_num %}
+      <a class="btn btn-secondary mb-4" href="{{url_for('home',page=page_num)}}"
+        >{{page_num}}</a
+      >
+      {% else %}
+      <a class="btn btn-light mb-4" href="{{url_for('home',page=page_num)}}"
+        >{{page_num}}</a
+      >
+      {% endif %} {% else %} ... {% endif %} {% endfor %}
+    </div>
+  </div>
+</main>
+<script>
+  function searchByName() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    table = document.getElementById('myTable');
+    tr = table.getElementsByTagName('tr');
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName('td')[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  }
+</script>
+{% endblock content %}

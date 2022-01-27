@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/ner.css')}}"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+      .nav-pills .nav-link {
+        color: gray;
+        background-color: white;
+      }
+
+      .nav-pills .nav-link.active {
+        background-color: gray;
+        color: white;
+      }
+    </style>
+    <title>NER Annual Reports</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="/">Company Annual Report</a>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="{{url_for('NER',report_id=report.id)}}"
+                  >Named Entity Recognition</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="{{url_for('info_extraction',report_id=report.id)}}"
+                  >Information Extraction</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{{url_for('table_extraction',report_id=report.id)}}"
+                  >Table Extraction</a
+                >
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="{{url_for('summary',report_id=report.id)}}"
+                  >Summary</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- <main role="main" class="container"> -->
+    <body class="container">
+      <h3 class="mb-3">{{company.company_name}}</h3>
+      <div><b>Period of Report:</b> {{report.report_period}}</div>
+      <div class="row">
+        <div class="col-md-2">
+          <br />
+          <div
+            class="nav flex-column nav-pills gray"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <a
+              class="nav-link active"
+              id="v-pills-settings-tab"
+              data-toggle="pill"
+              href="{{tables[0].link}}"
+              role="tab"
+              aria-controls="v-pills-settings"
+              aria-selected="false"
+              >{{tables[0].name}}</a
+            >
+            {% for i in range(1, 5)%}
+            <a
+              class="nav-link"
+              id="v-pills-settings-tab"
+              data-toggle="pill"
+              href="{{tables[i].link}}"
+              role="tab"
+              aria-controls="v-pills-settings"
+              aria-selected="false"
+              >{{tables[i].name}}</a
+            >
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-9">
+          <div class="tab-content" id="v-pills-tabContent">
+            <div
+              class="tab-pane fade show active"
+              id="{{tables[0].name}}"
+              role="tabpanel"
+              aria-labelledby="v-pills-home-tab"
+            >
+              <h3 class="mb-3" style="text-align: center">
+                {{tables[0].name}}
+              </h3>
+              {{tables[0].content|safe}}
+            </div>
+            {% for i in range(1,5) %}
+            <div
+              class="tab-pane fade"
+              id="{{tables[i].name}}"
+              role="tabpanel"
+              aria-labelledby="v-pills-home-tab"
+            >
+              <h3 class="mb-3" style="text-align: center">
+                {{tables[i].name}}
+              </h3>
+              {{tables[i].content|safe}}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div><br /><br /><br /></div>
+    </body>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </body>
+  <!-- SCRIPTS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+</html>

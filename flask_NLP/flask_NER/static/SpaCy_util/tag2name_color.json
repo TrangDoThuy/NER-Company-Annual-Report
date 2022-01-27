@@ -1,0 +1,20 @@
+{
+  "CARDINAL": { "name": "Number", "color": "#cc6666" },
+  "DATE": { "name": "Date or Period", "color": "#cc8866" },
+  "EVENT": { "name": "Event", "color": "#ccaa66" },
+  "FAC": { "name": "Infrastructure", "color": "#cccc66" },
+  "GPE": { "name": "Countries, cities, states", "color": "#aacc66" },
+  "LANGUAGE": { "name": "Language", "color": "#88cc66" },
+  "LAW": { "name": "Laws", "color": "#66cc66" },
+  "LOC": { "name": "Locations", "color": "#66cc88" },
+  "MONEY": { "name": "Money", "color": "#66ccaa" },
+  "NORP": { "name": "Nationalities or religious", "color": "#66cccc" },
+  "ORDINAL": { "name": "Ordinal", "color": "#66aacc" },
+  "ORG": { "name": "Organizations", "color": "#6687cc" },
+  "PERCENT": { "name": "Percent", "color": "#6666cc" },
+  "PERSON": { "name": "Person", "color": "#8766cc" },
+  "PRODUCT": { "name": "Product", "color": "#aa66cc" },
+  "QUANTITY": { "name": "Quantity", "color": "#cc66cc" },
+  "TIME": { "name": "Time", "color": "#cc66aa" },
+  "WORK_OF_ART": { "name": "Books, songs, etc.", "color": "#cc6688" }
+}

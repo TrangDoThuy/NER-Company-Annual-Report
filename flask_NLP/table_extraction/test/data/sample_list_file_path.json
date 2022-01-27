@@ -1,0 +1,52 @@
+[
+    {
+        "category": 1,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_operation_statement.html",
+        "file_type": "html"
+    },
+    {
+        "category": 1,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_operation_statement.json",
+        "file_type": "json"
+    },
+    {
+        "category": 2,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_income_statement.html",
+        "file_type": "html"
+    },
+    {
+        "category": 2,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_income_statement.json",
+        "file_type": "json"
+    },
+    {
+        "category": 3,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_balance_sheet.html",
+        "file_type": "html"
+    },
+    {
+        "category": 3,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_balance_sheet.json",
+        "file_type": "json"
+    },
+    {
+        "category": 4,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_cash_flows.html",
+        "file_type": "html"
+    },
+    {
+        "category": 4,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_cash_flows.json",
+        "file_type": "json"
+    },
+    {
+        "category": 5,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_equity_statement.html",
+        "file_type": "html"
+    },
+    {
+        "category": 5,
+        "file_directory": "test/data/annual_report_2008-12-19_a2189713z10-k_equity_statement.json",
+        "file_type": "json"
+    }
+]

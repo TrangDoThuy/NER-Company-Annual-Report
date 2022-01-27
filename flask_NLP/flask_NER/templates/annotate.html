@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Annotation</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/TextHighlighter.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/annotate.css') }}" rel="stylesheet">
+
+</head>
+<body>
+
+
+    <button type="button" onclick="func1('xxx',123);">Click Me</button>
+    <br>
+    <hr>
+    <br>
+
+
+
+    <h3>Data Extraction</h3>      
+      <div id="dl_highlight" class="colR" style="display:block;">
+        <div class="icon-bar">
+            <a class="action" title="Label from model" id="hl_learn" href="#"><i class="fa fa-magic">Label from model</i></a>
+            <a class="action" title="Create New Tag" id="hl_createtag" href="#"><i class="fa fa-tags">Create New Tag</i></a>
+            <a class="action" title="Undo highlight" id="hl_undo" href="#"><i class="fa fa-undo">Undo highlight</i></a> 
+            <a class="action" title="Remove all highlights" id="hl_remove" href="#"><i class="fa fa-eye-slash">Remove all highlights</i></a>
+            <a class="action" title="Accept" id="hl_serialize" href="#"><i class="fa fa-check">Accept</i></a>
+            <a class="action" title="Reject" id="hl_serialize2" href="#"><i class="fa fa-close">Reject</i></a>
+            <a class="action" title="Ignore" id="hl_serialize3" href="#"><i class="fa fa-minus-circle">Ignore</i></a>
+        </div>
+
+        <select id="dl_dataset">
+          <option>file1</option>
+          <option>file2</option>
+        </select>
+
+
+
+        <div id="div_dl_createtag" class="modal" style="display: none;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">&times;</span>
+              <h4>Create Tag</h4>
+            </div>
+            <div class="modal-body">
+              <form method="post">
+                <br>
+                <label>Tag Name:</label>
+                <input id="hl_text" type="text" maxlength="32" style="width: 65%; border-width: 1px;" /><br> <!--background-color: #000000; color: #ffffff;-->
+                <label>Color:</label>
+                <input id="hl_color" type="color" value="#ff8080" /><br>
+                <br>
+                <input id="hl_btn" class="my_formbtn" type="submit" value="ADD">
+                <br>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="dropdown-display-label">
+          <div id="dl_colorpick" class="color-picker dropdown-chose-list">
+            <div class="hl_dropdown-menu">
+            </div>
+          </div>
+        </div>
+
+        <br><br>
+        <div>
+          <div id="dl_sandbox" style="padding: 4px 8px 4px 8px;height:75vh;max-height:75vh;overflow-y:auto;white-space:pre-wrap;">
+
+                {{data |safe}}
+
+          </div>
+        </div>    
+        
+      </div>
+
+
+
+      <div id="dl_task2" class="colR" style="display:none;"></div>
+      
+
+    </div>
+    <br>
+
+
+
+    <script type="text/javascript">
+    function func1(arg1, arg2) {
+        $.post('/update', {
+            type: 'post',
+            url: '/update',
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify({'arg1': arg1, 'arg2': arg2})
+        }).done(function(q) {
+
+            console.log("get data from server = ", q);
+
+        }).fail(function() {
+
+            //error handling
+
+        });
+    }
+    </script>
+
+
+
+    <script type="text/javascript">
+    var modal_dl_ct = document.getElementById("div_dl_createtag");
+    window.dl_meta = [], window.tag_id=0, window.tags=[], window.hltr=null, window.selectedtag="", window.maptag={};
+    window.epicker = document.querySelector('.color-picker');
+
+    function dl_loaddataset(file){
+      $("#dl_dataset").val(file);          
+      var task = $("#dl_task").children("option:selected").val();
+      var fpath = $("#dl_databatch").children("option:selected").val();
+      var cur_path = "/data/"+fpath+"/"+file;
+      $.post('/dl_loadcontent', {
+        type: 'post',
+        url: '/dl_loadcontent',
+        contentType: 'application/json;charset=UTF-8',
+        dataType: 'json',
+        data: JSON.stringify({"task":task,"fpath":fpath,"file":file})
+      }).done(function(q) {
+        $("#loading-image6").hide();
+        if(q.status){
+          document.getElementById("dl_sandbox").innerHTML = q.data;
+          hl_loadfrom(q.res);
+        }
+      }).fail(function() {
+        console.log("Fail to load data ...");
+        $("#loading-image6").hide();
+      });
+    }
+
+    $('#dl_task').on('change', function(e) {
+      var task = this.value;
+      $("#dl_highlight").hide();
+      $("#dl_task2").hide();
+      $.post('/get_labeldataset', {
+        type: 'post',
+        url: '/get_labeldataset',
+        contentType: 'application/json;charset=UTF-8',
+        dataType: 'json',
+        data: JSON.stringify({})
+      }).done(function(q) {
+        $("#loading-image6").hide();
+        if(q.status){
+          window.dl_meta = q.data;
+          $('#dl_databatch').empty();
+          $('#dl_databatch').append('<option value="" disabled selected>---</option>');
+          for (var i=0; i<q.data.length; ++i){
+            $('#dl_databatch').append('<option value="'+q.data[i].f+'">'+q.data[i].f+'</option>');
+          }
+        }
+      }).fail(function() {
+        console.log("Fail to load data ...");
+        $("#loading-image6").hide();
+      });
+
+      switch(task){
+        case "name_entities":
+          $("#dl_highlight").show();
+          break;
+        case "text_classify":
+          $("#dl_task2").show();
+          break;
+        default:
+          break;
+      }
+    });
+
+    $('#dl_databatch').on('change', function(e) {
+      var databatch = this.value;
+      var task = $("#dl_task").children("option:selected").val();
+      $('#dl_dataset').empty();
+      $('#dl_dataset').append('<option value="" disabled selected>---</option>');
+      for(var i=0;i<window.dl_meta.length;i++){
+        if(databatch==window.dl_meta[i].f){
+          // get batch summary
+          $.post('/get_batchsummary', {
+            type: 'post',
+            url: '/get_batchsummary',
+            contentType: 'application/json;charset=UTF-8',
+            dataType: 'json',
+            data: JSON.stringify({"task":task,"batch":databatch})
+          }).done(function(q) {
+            $("#loading-image6").hide();
+            if(q.status){
+              $('#dl_history').empty();
+              for(var j=0;j<q.data.accept.length;j++){
+                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.data.accept[j]+'")><div class="c0187">'+q.data.accept[j]+'</div><span class="c0186 c0183"><i class="fa fa-check" style="color:#90EE90;"></i></span></div>');
+              }
+              for(var j=0;j<q.data.reject.length;j++){
+                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.data.reject[j]+'")><div class="c0187">'+q.data.reject[j]+'</div><span class="c0186 c0183"><i class="fa fa-close" style="color:#ff8280;"></i></span></div>');
+              }
+              for(var j=0;j<q.data.ignore.length;j++){
+                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.data.ignore[j]+'")><div class="c0187">'+q.data.ignore[j]+'</div><span class="c0186 c0183"><i class="fa fa-minus-circle" style="color:#fff86b;"></i></span></div>');
+              }
+            }
+          }).fail(function() {
+            console.log("Fail to load data ...");
+            $("#loading-image6").hide();
+          });
+          // update count
+          var n1 = window.dl_meta[i].meta["accept"].length, n2 = window.dl_meta[i].meta["reject"].length, n3 = window.dl_meta[i].meta["ignore"].length;
+          dl_cnt_update("dl_hl_total", window.dl_meta[i].n);
+          dl_cnt_update("dl_hl_accept", n1);
+          dl_cnt_update("dl_hl_reject", n2);
+          dl_cnt_update("dl_hl_ignore", n3);
+          n = 100*(n1+n2+n3)/window.dl_meta[i].n;
+          document.getElementById("dl_hl_progress").innerHTML = '<progress class="c0195" max="100" value="'+n+'"></progress><div class="c0196">'+n+'%</div>';
+          for (var j=0; j<window.dl_meta[i].n; j++){
+            $('#dl_dataset').append('<option value="'+window.dl_meta[i].c[j]+'">'+window.dl_meta[i].c[j]+'</option>');
+          }
+        }
+      }
+    });
+
+    function dl_cnt_update(e,n){
+      try{
+        var s = document.getElementById(e).innerHTML;
+        var p = s.indexOf("</div>");
+        document.getElementById(e).innerHTML = s.substring(0,p)+"</div>"+n.toString();
+      }
+      catch{}
+    }
+
+    $('#dl_dataset').on('change', function(e) {
+      var file = this.value;
+      var task = $("#dl_task").children("option:selected").val();
+      var fpath = $("#dl_databatch").children("option:selected").val();
+      var cur_path = "/data/"+fpath+"/"+file;
+      $.post('/dl_loadcontent', {
+        type: 'post',
+        url: '/dl_loadcontent',
+        contentType: 'application/json;charset=UTF-8',
+        dataType: 'json',
+        data: JSON.stringify({"task":task,"fpath":fpath,"file":file})
+      }).done(function(q) {
+        $("#loading-image6").hide();
+        if(q.status){
+          document.getElementById("dl_sandbox").innerHTML = q.data; //.split("\n").join('<br>');
+          hl_loadfrom(q.res);
+        }
+      }).fail(function() {
+        console.log("Fail to load data ...");
+        $("#loading-image6").hide();
+      });
+    });
+
+    $('#hl_learn').click(function(e){
+        e.preventDefault();
+        var task = $("#dl_task").children("option:selected").val();
+        var fpath = $("#dl_databatch").children("option:selected").val();
+        var file = $("#dl_dataset").children("option:selected").val();
+        $('#dl_highlight').hide();
+        $("#loading-image6").show();
+        $.post('/dl_learndata', {
+          type: 'post',
+          url: '/dl_learndata',
+          contentType: 'application/json;charset=UTF-8',
+          dataType: 'json',
+          data: JSON.stringify({"task":task, "fpath":fpath, "file":file})
+        }).done(function(q) {
+          $("#loading-image6").hide();
+          $('#dl_highlight').show();
+          if(q.status){
+            /*d = [{"timestamp":"1624010980537", "content":'amet', "path":"1", "offset":22, "length":4, "color":"#ffff7b", "tag":"label1"}, ];*/
+            hl_loadfrom(q.data);
+          }
+        }).fail(function() {
+          console.log("Fail to load data ...");
+          $('#dl_highlight').show();
+          $("#loading-image6").hide();
+        });
+    });
+    function hl_removeitem(t){
+        try{
+            var h = window.hltr.getHighlights();
+            h.forEach(function (e) {
+                if(e.getAttribute("data-timestamp")==t){
+                    window.hltr.removeHighlight(e);
+                    return;
+                }
+            });
+            try{delete window.maptag[t];}
+            catch{}
+        }
+        catch{}
+    }
+    function hl_loadfrom(d){
+      //var d = [['<span class="highlighted" data-timestamp="1624010980537" style="background-color: rgb(255, 255, 123);" data-highlighted="true"></span>', 'gue i', '3:3', 14, 5]];
+      arr = [];
+      $.each(d, function(k, v){
+        var s = ['<span class="highlighted" data-timestamp="'+v.timestamp+'" onclick="hl_removeitem('+v.timestamp+')" style="background-color: '+v.color+';" data-highlighted="true"></span>', v.content, v.path, v.offset, v.length];
+        arr.push(s);
+        window.maptag[v.timestamp] = v.tag;
+        window.selectedtag = v.tag;
+        if(!window.tags.includes(v.tag) && v.tag){
+          window.tag_id+=1;
+          window.tags.push(v.tag);
+          var fc = getBrightness(v.color) ? "#eeeeee" : "#111111";
+          var div1 = $('<i class="del" data-id="'+window.tag_id+'" style="color:'+fc+'">');
+          var div = $('<span style="background-color:'+v.color+'" class="dropdown-selected">').append(
+              $('<p style="margin:0px;color:'+fc+'">').text(v.tag),
+              div1
+          ).appendTo($('.color-picker'));
+          div.click(function(){
+            if (v.color !== epicker.color) {
+              window.selectedtag = v.tag;
+              epicker.color = v.color;
+              if (epicker.selected) epicker.selected.removeClass("selected");
+              epicker.selected = div;
+              epicker.selected.addClass("selected");
+              if (typeof epicker.callback==='function') {
+                epicker.callback.call(epicker, v.color);
+              }
+            }
+          });
+          div1.click(function(){
+            var idx = window.tags.indexOf(v.tag);
+            if(idx>-1) window.tags.splice(idx, 1);
+            div.remove();
+          });
+          div.trigger('click');
+          //reset margin
+          var h = document.getElementById("dl_colorpick").offsetHeight;
+          document.getElementById("dl_sandbox").style.marginTop = (h).toString()+"px";
+        }
+      });
+      var s = JSON.stringify(arr);
+      window.hltr.removeHighlights();
+      window.hltr.deserializeHighlights(s);
+    }
+
+    function getBrightness(c){
+        var c = c.substring(1);
+        var rgb = parseInt(c, 16);
+        var r = (rgb >> 16) & 0xff;
+        var g = (rgb >>  8) & 0xff;
+        var b = (rgb >>  0) & 0xff; 
+        var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        if (luma < 80) return true;
+        return false;
+    }
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) color += letters[Math.floor(Math.random() * 16)];
+      return color;
+    }
+    function rgbToHex(rgb) { 
+      var hex = Number(rgb).toString(16);
+      if (hex.length<2) hex="0"+hex;
+      return hex;
+    };
+    function fullColorHex(s) {
+        try{
+          var s1 = s.indexOf("("), s2 = s.indexOf(")");
+          var a = s.substring(s1+1,s2).split(",");
+          return "#"+rgbToHex(a[0])+rgbToHex(a[1])+rgbToHex(a[2]);        
+        }
+        catch{return "#000000"}
+    };
+    $("#hl_undo").click(function(){
+        function getMinMax(arr) {
+          if (!arr) return null;
+          var minV = arr[0], maxV = arr[0];
+          for (a of arr) {
+            if (a < minV) minV = a;
+            if (a > maxV) maxV = a;
+          }
+          return [maxV, minV];
+        }
+        var t = getMinMax(Object.keys(window.maptag))[0];
+        if(t){
+            var h = window.hltr.getHighlights();
+            h.forEach(function (e) {
+                if(e.getAttribute("data-timestamp")==t){
+                    window.hltr.removeHighlight(e);
+                    return;
+                }
+            });
+            try{delete window.maptag[t];}
+            catch{}
+        }
+    });
+    $("#hl_btn").click(function(e){
+        e.preventDefault();
+        var n = $("#hl_text").val();
+        var c = $("#hl_color").val();
+        var fc = getBrightness(c) ? "#eeeeee" : "#111111";
+        //console.log(n, c);
+        modal_dl_ct.style.display = "none";
+        $("#hl_text").val("");
+        $("#hl_color").val(getRandomColor());
+
+        if(n=="") alert("Tag value cannot be empty!");
+        else if(window.tags.includes(n)) alert("Duplicated tag value!"); 
+        else{
+            window.tags.push(n);
+            window.tag_id+=1;
+            var div1 = $('<i class="del" data-id="'+window.tag_id+'" style="color:'+fc+'">');
+            var div = $('<span style="background-color:'+c+'" class="dropdown-selected">').append(
+                $('<p style="margin:0px;color:'+fc+'">').text(n),
+                div1
+            ).appendTo($('.color-picker'));
+            div.click(function(){
+                if (c !== epicker.color) {
+                    window.selectedtag = n;
+                    epicker.color = c;
+                    if (epicker.selected) epicker.selected.removeClass("selected");
+                    epicker.selected = div;
+                    epicker.selected.addClass("selected");
+                    if (typeof epicker.callback==='function') {
+                        epicker.callback.call(epicker, c);
+                    }
+                }
+            });
+            div1.click(function(){
+                //div1.attr("data-id");
+                var idx = window.tags.indexOf(n);
+                if(idx>-1) window.tags.splice(idx, 1);
+                div.remove();
+            });
+            div.trigger('click');
+            //reset margin
+            var h = document.getElementById("dl_colorpick").offsetHeight;
+            document.getElementById("dl_sandbox").style.marginTop = (h).toString()+"px";
+        }
+    });
+
+    let dropdownBtn = document.querySelector('#hl_createtag');
+    dropdownBtn.addEventListener('click',()=>{
+       modal_dl_ct.style.display = (modal_dl_ct.style.display==="none") ? "block" : "none";
+    })
+
+    var ColorPicker = (function () {
+        var COLORS = []; //'#FFFF7B', '#F44336', '#8BC34A', '#29B6F6'];
+        function ColorPicker(el) {
+            epicker = this;
+            epicker.color = COLORS[0];
+            epicker.selected = null;
+            COLORS.forEach(function (color) {
+                window.tag_id+=1;
+                if (epicker.color===color) {
+                    var div = $('<span style="background-color:'+color+'" class="dropdown-selected selected">').append(
+                        $('<p style="margin:0px;">').text("unknown"),
+                        $('<i class="del" data-id="'+window.tag_id+'">')
+                    );
+                    epicker.selected = div;
+                    div.appendTo(el);
+                }
+                else{
+                    var div = $('<span style="background-color:'+color+'" class="dropdown-selected">').append(
+                        $('<p style="margin:0px;">').text("unknown"),
+                        $('<i class="del" data-id="'+window.tag_id+'">')
+                    ).appendTo(el);
+                }
+                div.click(function(){
+                    if (color !== epicker.color) {
+                        epicker.color = color;
+                        if (epicker.selected) epicker.selected.removeClass("selected");
+                        epicker.selected = div;
+                        epicker.selected.addClass("selected");
+                        if (typeof epicker.callback==='function') epicker.callback.call(epicker, color);
+                    }
+                });
+            });
+        }
+        ColorPicker.prototype.onColorChange = function (callback) {
+            this.callback = callback;
+        };
+        return ColorPicker;
+    })();
+
+    $(document).ready(function() {
+        var removeBtn = document.getElementById('hl_remove'),
+            hl_acceptBtn  = document.getElementById('hl_serialize'),
+            hl_rejectBtn  = document.getElementById('hl_serialize2'),
+            hl_ignoreBtn  = document.getElementById('hl_serialize3'),
+            deserializeBtn  = document.getElementById('hl_deserialize');
+        var sandbox = document.getElementById('dl_sandbox');
+        var colors = new ColorPicker(document.querySelector('.color-picker'));
+        //var hltr = new TextHighlighter(sandbox);
+        window.hltr = new TextHighlighter(sandbox, {
+            onBeforeHighlight: function (range) {
+                return true;
+            },
+            onAfterHighlight: function (range, highlights) {
+                highlights.map(function (h) {
+                    var t = h.getAttribute("data-timestamp");
+                    window.maptag[t] = window.selectedtag;
+                });
+                //range.extractContents();
+                return true;
+            },
+            onRemoveHighlight: function (hl) {
+                return true;
+            }
+        });
+        var serialized = '';
+        colors.onColorChange(function (color) {
+            window.hltr.setColor(color);
+        });
+        removeBtn.addEventListener('click', function () {
+            window.hltr.removeHighlights();
+        });
+
+        function confirm_hl(action){
+            serialized = window.hltr.serializeHighlights();
+            var d = JSON.parse(serialized);
+            var task = $("#dl_task").children("option:selected").val();
+            var fpath = $("#dl_databatch").children("option:selected").val();
+            var file = $("#dl_dataset").children("option:selected").val();
+            var out = [];
+            if(fpath!="" && file!=""){
+              //console.log("debug 1 ... ",serialized);
+              for(var i=0;i<d.length;i++){
+                  var temp = document.createElement("div");
+                  temp.innerHTML=d[i][0];
+                  var t = temp.firstElementChild.getAttribute("data-timestamp");
+                  var c = temp.firstElementChild.getAttribute("style");
+                  c = c.replace("background-color: ","").replace(";","");
+                  if (!c.includes("#")) c = fullColorHex(c);
+                  var res = {
+                      "content":d[i][1],
+                      "path":d[i][2],
+                      "offset":d[i][3],
+                      "length":d[i][4],
+                      "timestamp":t,
+                      "tag":window.maptag[t],
+                      "color":c
+                  };
+                  out.push(res);
+                  //console.log("debug 2 ... ", i, res, d);
+              }
+              $("#loading-image6").show();
+              $("#dl_highlight").hide();
+              $.post('/confirm_extraction', {
+                type: 'post',
+                url: '/confirm_extraction',
+                contentType: 'application/json;charset=UTF-8',
+                dataType: 'json',
+                data: JSON.stringify({"res":out, "task":task, "batch":fpath, "item":file,"action":action})
+              }).done(function(q) { // what is the purpose of this part???
+                $("#dl_highlight").show();
+                $("#loading-image6").hide();
+                var x = document.getElementById("snackbar_danger");
+                x.innerHTML = "ERROR:<br><br>"+q.data;
+                if(q.status){
+                  try{
+                    for(var i=0;i<window.dl_meta.length;i++){
+                        if(window.dl_meta[i].f==fpath){
+                            window.dl_meta[i].meta = q.meta;
+                            $('#dl_history').empty();
+                            for(var j=0;j<q.meta.accept.length;j++){
+                                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.meta.accept[j]+'")><div class="c0187">'+q.meta.accept[j]+'</div><span class="c0186 c0183"><i class="fa fa-check" style="color:#90EE90;"></i></span></div>');
+                            }
+                            for(var j=0;j<q.meta.reject.length;j++){
+                                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.meta.reject[j]+'")><div class="c0187">'+q.meta.reject[j]+'</div><span class="c0186 c0183"><i class="fa fa-close" style="color:#ff8280;"></i></span></div>');
+                            }
+                            for(var j=0;j<q.meta.ignore.length;j++){
+                                $('#dl_history').append('<div class="c01104 c01105" onclick=dl_loaddataset("'+q.meta.ignore[j]+'")><div class="c0187">'+q.meta.ignore[j]+'</div><span class="c0186 c0183"><i class="fa fa-minus-circle" style="color:#fff86b;"></i></span></div>');
+                            }
+                            // update count
+                            var n1 = window.dl_meta[i].meta["accept"].length, 
+                                n2 = window.dl_meta[i].meta["reject"].length, 
+                                n3 = window.dl_meta[i].meta["ignore"].length;
+                            dl_cnt_update("dl_hl_total", window.dl_meta[i].n);
+                            dl_cnt_update("dl_hl_accept", n1);
+                            dl_cnt_update("dl_hl_reject", n2);
+                            dl_cnt_update("dl_hl_ignore", n3);
+                            n = 100*(n1+n2+n3)/window.dl_meta[i].n;
+                            document.getElementById("dl_hl_progress").innerHTML = '<progress class="c0195" max="100" value="'+n+'"></progress><div class="c0196">'+n+'%</div>';
+                            break;
+                        }
+                    }
+                  }
+                  catch{}
+                  x = document.getElementById("snackbar_info");
+                  x.innerHTML = "INFO:<br><br>"+q.data;
+                }
+                x.className = "show";
+                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+              }).fail(function() {
+                console.log("Fail to load data ...");
+                $("#dl_highlight").show();
+                $("#loading-image6").hide();
+              });
+            }
+            else{
+              var x = document.getElementById("snackbar_danger");
+              x.innerHTML = "ERROR:<br><br>No dataset selected!";
+              x.className = "show";
+              setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            }
+            //window.hltr.removeHighlights();
+        }
+        hl_acceptBtn.addEventListener('click', function () {
+            confirm_hl("accept");
+        });
+        hl_rejectBtn.addEventListener('click', function () {
+            confirm_hl("reject");
+        });
+        hl_ignoreBtn.addEventListener('click', function () {
+            confirm_hl("ignore");
+        });
+    });
+
+    </script>
+
+
+</body>
+</html>

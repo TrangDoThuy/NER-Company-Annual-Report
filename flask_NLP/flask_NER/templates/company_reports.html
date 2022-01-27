@@ -1,0 +1,44 @@
+{% extends "layout.html" %} {% block content %}
+<header class="site-header">
+  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+    <div class="container">
+      <a class="navbar-brand mr-4" href="/">Company Annual Report</a>
+    </div>
+  </nav>
+</header>
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-9">
+      <h1 class="mb-3">{{company.company_name}}</h1>
+
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">File name</th>
+            <th scope="col">Report Period</th>
+            <th scope="col">Filing Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in reports.items %}
+          <tr>
+            <th scope="row">{{report.id}}</th>
+            <td>
+              <a
+                style="text-decoration: none; color: black"
+                href="{{url_for('table_extraction', report_id=report.id)}}"
+                >{{report.file_directory.split('/')[-1]}}</a
+              >
+            </td>
+            <td>{{report.report_period}}</td>
+            <td>{{report.filing_date}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+{% endblock content %}

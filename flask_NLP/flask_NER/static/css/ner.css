@@ -1,0 +1,218 @@
+body {
+  background: white;
+  color: #333333;
+  margin-top: 5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #444444;
+}
+
+.bg-steel {
+  background-color: #5f788a;
+}
+
+.site-header .navbar-nav .nav-link {
+  color: #cbd5db;
+}
+
+.site-header .navbar-nav .nav-link:hover {
+  color: #ffffff;
+}
+
+.site-header .navbar-nav .nav-link.active {
+  font-weight: 500;
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.document-render {
+  padding: 12px 0px 12px 30px; /* Add some padding */
+  border: 2px solid gray; /* Add a grey border */
+  margin-left: 20px;
+}
+#myInput {
+  background-position: 10px 12px; /* Position the search icon */
+  background-repeat: no-repeat; /* Do not repeat the icon image */
+  width: 100%; /* Full-width */
+  font-size: 16px; /* Increase font-size */
+  padding: 12px 20px 12px 40px; /* Add some padding */
+  border: 1px solid #ddd; /* Add a grey border */
+  margin-bottom: 10px; /* Add some space below the input */
+}
+
+.fa {
+  color: #ccc;
+}
+
+.color-picker {
+  float: left;
+  display: block;
+  margin: 10px 0 5px;
+  text-align: center;
+}
+.color-picker > span {
+  border: 1px solid #111 !important;
+  display: inline-block !important;
+  cursor: pointer !important;
+}
+.color-picker > span:hover {
+  cursor: pointer;
+  border: 1px solid #444;
+}
+.color-picker .selected {
+  box-shadow: #bbb 0 0 4px 2px;
+}
+
+.dropdown-display-label .dropdown-selected {
+  position: relative;
+  margin: 0 5px 5px 0;
+  padding: 0 20px 0 5px;
+  border: 1px solid #aaa;
+  max-width: 100%;
+  border-radius: 3px;
+  background-repeat: repeat-x;
+  color: #333;
+  cursor: default;
+  display: inline-block;
+}
+.dropdown-display-label .dropdown-selected .del {
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+  float: right;
+  line-height: 1;
+  color: #999;
+  position: absolute;
+  right: 3px;
+  top: 0;
+}
+.dropdown-display-label .dropdown-selected .del:after {
+  content: '\D7';
+  font-size: 16px;
+}
+
+.hl_createtag {
+  color: #333;
+  background-color: transparent;
+  margin-right: 10px;
+  cursor: pointer;
+  border: none;
+}
+.hl_dropdown-menu {
+  float: left;
+  position: relative;
+  display: inline-block;
+  margin-top: -8px;
+  cursor: pointer;
+}
+
+.action {
+  border: 1px;
+  background-color: #555;
+  padding: 10px;
+}
+.icon-bar {
+  margin-bottom: 10px;
+}
+.content-paginator-nav {
+  position: relative;
+  overflow: hidden;
+}
+.content-paginator-button {
+  float: left;
+}
+.content-paginator-numbers {
+  float: right;
+}
+.content-paginator-button a {
+  color: #09f;
+  text-decoration: none;
+}
+.content-paginator-button a:hover {
+  text-decoration: underline;
+}
+.content-paginator-button .content-paginator-button-disabled {
+  color: #bbb;
+}
+.content-paginator-button .content-paginator-button-disabled:hover {
+  text-decoration: none;
+}
+.content-paginator-button-prev {
+  margin-right: 5px;
+}
+.prev {
+  margin-right: 550px;
+}
+.gray .active a,
+.gray .active a:hover {
+  background-color: gray !important;
+}
+.nav-pills > .active > a,
+.nav-pills > .active > a:hover {
+  background-color: gray !important;
+}
+
+/* Loading modal */
+/** SPINNER CREATION **/
+
+.loader {
+  position: relative;
+  text-align: center;
+  margin: 15px auto 35px auto;
+  z-index: 9999;
+  display: block;
+  width: 80px;
+  height: 80px;
+  border: 10px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top-color: #000;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+/** MODAL STYLING **/
+
+.modal-content {
+  border-radius: 0px;
+  box-shadow: 0 0 20px 8px rgba(0, 0, 0, 0.7);
+}
+
+.modal-backdrop.show {
+  opacity: 0.75;
+}
+
+/* .loader-txt {
+  p {
+    font-size: 13px;
+    color: #666;
+    small {
+      font-size: 11.5px;
+      color: #999;
+    }
+  }
+} */
